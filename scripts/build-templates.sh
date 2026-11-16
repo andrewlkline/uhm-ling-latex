@@ -22,10 +22,11 @@ build() {  # $1 template dir name, $2 output name
   cat > "$out/README.txt" <<EOF
 UHM Linguistics LaTeX template ($2, $VERSION)
 
-Compile with LuaLaTeX (or XeLaTeX) and Biber:  latexmk main.tex
-On Overleaf: New Project > Upload Project > choose this zip. The included
-latexmkrc selects LuaLaTeX; if Overleaf complains, set Menu > Compiler to
-LuaLaTeX.
+Compile with XeLaTeX (or LuaLaTeX) and Biber:  latexmk main.tex
+On Overleaf: New Project > Upload Project > choose this zip, then Recompile.
+The included latexmkrc runs XeLaTeX whatever the Compiler menu says, unless
+you choose LuaLaTeX there (needed only for the dissertation's "check" run;
+LuaLaTeX's first compile is slow and may exceed Overleaf's free time limit).
 
 The .cls/.sty/.def/.lua files are the template's machinery; edit main.tex
 (and chapters/, references.bib). Documentation and updates:

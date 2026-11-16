@@ -277,11 +277,13 @@
 %% ------------------------------------------------------------------
 %% With abbreviations=true, \Sg, \Pl, \Erg, ... (and your own
 %% \newleipzig{evid}{evid}{evidential}) print in small caps and are
-%% collected; \printglosses prints the list. Needs makeindex, which
-%% glossaries runs itself (option automake). latexmk and Overleaf both
-%% handle this; it takes one extra compile for the list to appear.
+%% collected; \printglosses prints the list. Needs makeindex between
+%% LaTeX runs: the templates' latexmkrc has the rule (Overleaf's built-in
+%% latexmk setup does too). Without latexmk, run makeglossaries yourself.
+%% (glossaries' own automake option is avoided: it costs an extra LaTeX
+%% run, which matters on Overleaf's free plan.)
 \ifuhm@abbrevs
-  \RequirePackage[automake=immediate,nonumberlist,nopostdot,nogroupskip,toc]{glossaries}
+  \RequirePackage[nonumberlist,nopostdot,nogroupskip,toc]{glossaries}
   \RequirePackage{glossary-inline,glossary-tree,glossary-mcols}
   \RequirePackage[block]{leipzig}% two-column list with an "Abbreviations" heading
   \makeglossaries

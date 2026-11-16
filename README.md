@@ -18,7 +18,7 @@ The aim is to replace copying preambles from old projects. Everything compiles t
    ```
    This creates `dist/uhm-qp-template/` and `dist/uhm-diss-template/`, each with a `.zip`. Every folder holds `main.tex`, `references.bib` and `latexmkrc`, plus copies of all the class files.
 2. **Local:** copy a folder, edit `main.tex`, and run `latexmk main.tex`.
-   **Overleaf:** New Project > Upload Project, then choose the zip. The `latexmkrc` selects LuaLaTeX.
+   **Overleaf:** New Project > Upload Project, then choose the zip. The `latexmkrc` selects XeLaTeX, whatever Overleaf's Compiler menu says (unless you pick LuaLaTeX there). A fresh project's first compile takes about 9 s (three passes plus Biber); later recompiles are one pass of about 2–3 s, because Overleaf keeps the build files.
 
 **Your own machine, without copying the class files into each project:**
 
@@ -28,11 +28,15 @@ scripts/install-local.sh
 
 This symlinks `src/` into your TEXMFHOME (`~/Library/texmf/tex/latex/uhm-ling`), so `\documentclass{uhmqp}` works in any folder and edits in `src/` apply everywhere. Copy only `templates/qp/` (or `templates/diss/`) into a new project. Undo with `scripts/install-local.sh --remove`. A project that also contains copies of the class files uses those copies, because the current folder is searched first.
 
-**Positron / VS Code (LaTeX Workshop):** each template has a `.vscode/settings.json` that makes saving the file build with `latexmk`, so the folder's `latexmkrc` chooses LuaLaTeX. Open the template's own folder (not a parent folder) as the workspace so this setting applies.
+**Positron / VS Code (LaTeX Workshop):** each template has a `.vscode/settings.json` that makes saving the file build with `latexmk`, so the folder's `latexmkrc` chooses the engine (XeLaTeX). Open the template's own folder (not a parent folder) as the workspace so this setting applies.
 
 ## Requirements
 
-- **Engine:** LuaLaTeX (the default) or XeLaTeX, both tested. On Overleaf, the project's Compiler setting (default pdfLaTeX) overrides `$pdf_mode` in `latexmkrc`, so the templates' `latexmkrc` also sets `$pdflatex = 'lualatex %O %S'`: whatever Overleaf asks for, LuaLaTeX runs. Projects made before this fix need Menu > Settings > Compiler > LuaLaTeX. The packages use `fontspec` and refuse to run under pdfLaTeX. LuaLaTeX is the default because the dissertation's `check` option needs it, and microtype font expansion works only in LuaLaTeX. LangSci itself uses XeLaTeX, and everything here also compiles with it. To switch, set `$pdf_mode = 5;` in `latexmkrc`.
+- **Engine:** XeLaTeX (the default) or LuaLaTeX, both tested; the packages use `fontspec` and refuse to run under pdfLaTeX.
+  - **Why XeLaTeX:** LuaLaTeX caches fonts, and on a fresh machine (every new Overleaf project) building that cache adds about 9 s to the first run. That pushed the templates past the compile time of Overleaf's free plan. XeLaTeX has no such cache. Measured cold-start full builds: LuaLaTeX ~22 s, XeLaTeX ~9 s.
+  - **When to use LuaLaTeX:** the dissertation's `check` report needs it (`latexmk -lualatex main.tex`, or LuaLaTeX in Overleaf's Compiler menu). LuaLaTeX also adds microtype font expansion.
+  - **Overleaf's Compiler menu** (default pdfLaTeX) overrides `$pdf_mode` in `latexmkrc`, so the templates' `latexmkrc` also sets `$pdflatex = 'xelatex %O %S'`. Choosing LuaLaTeX or XeLaTeX in the menu still works as labelled.
+  - **Passes:** `latexmkrc` runs `makeindex` for the abbreviations list itself and ignores biblatex's `.run.xml` log, so a full build is three passes, not four.
 - **Bibliography:** Biber. latexmk runs it automatically.
 - **TeX Live 2023 or later.** Developed on TeX Live 2025. Overleaf runs a full TeX Live, so every package and font used here is available there.
 - **Fonts:** nothing is bundled. Every font set is loaded **by file name** from TeX Live's own font packages, so output is identical on any machine regardless of what is installed system-wide (see the table below). Andy's system "Charis" (version 7) is not used; TeX Live's Charis SIL 6.101 is.
@@ -85,7 +89,7 @@ To add a set, define `\uhm@fontset@<name>` in the core, following the existing o
 
 **What else the core sets up:**
 - **Examples:** `langsci-gb4e` (`\ea … \z`, `\gll`, `\glt`, sub-examples). An example's source goes in `\exsource{Author 2020: 12}` after the translation; it is flush right by default, and the STUF profile puts it on its own line.
-- **Glosses:** `leipzig` with `glossaries`. `\Sg`, `\Erg`, `\Fsg`, … print in small caps and are collected automatically. Add your own with `\newleipzig{evid}{evid}{evidential}`, which gives `\Evid`. `\printglosses` (QP) or `\listofabbreviations` (dissertation) prints the list. `glossaries` runs `makeindex` itself (`automake`); the list appears on the second compile.
+- **Glosses:** `leipzig` with `glossaries`. `\Sg`, `\Erg`, `\Fsg`, … print in small caps and are collected automatically. Add your own with `\newleipzig{evid}{evid}{evidential}`, which gives `\Evid`. `\printglosses` (QP) or `\listofabbreviations` (dissertation) prints the list. `makeindex` runs between passes through a rule in the templates' `latexmkrc` (copy that file into any project that uses `\printglosses`; without latexmk, run `makeglossaries main` yourself).
 - **Tables:** `booktabs`, `tabularx`, `multirow`, `threeparttable` (`\tnote{a}` for lettered table notes), `pdflscape`.
 - **Bibliography:** `biblatex` with `langsci-unified`, i.e. the Unified Style Sheet:
   - Citations are Author (Year: pages) with no "p.", and "et al." for three or more authors. The reference list gives every name.
@@ -224,6 +228,8 @@ Overfull boxes are reported but do not fail the run. Last full run (2026-11-15):
 - **`geometry` does not parse `1in+4pt`.** Use `1.06in`.
 - **Don't check margins with `pdftotext -bbox`.** Its boxes come from font ascent/descent metrics, not ink, and XeTeX embeds those differently from LuaTeX, so a compliant XeLaTeX PDF appears to violate the margin by 1–2pt. `check-margins.py` rasterises instead.
 - **biber on macOS 26: "extracting arm64 binary with lipo failed".** TeX Live 2025's universal `biber` launcher calls `lipo -extract_family`, which current Xcode's `lipo` lacks. Workaround: extract the arm64 binary once (`lipo /Library/TeX/texbin/biber -thin arm64 -output ~/Library/TeX/biber-arm64`) and point latexmk at it in `~/.latexmkrc` (`$biber = "\"$ENV{HOME}/Library/TeX/biber-arm64\" %O %S";`). Any editor recipe that calls `biber` directly needs the same path. This is a machine problem, not a template problem. The templates therefore carry no `% !TEX program` / `% !BIB program` magic comments: LaTeX Workshop obeys those over any recipe and calls plain `biber`. The templates' `.vscode/settings.json` also sets `forceRecipeUsage`.
+- **LuaLaTeX is slow on a cold font cache.** The first LuaLaTeX run on a fresh machine (a new Overleaf project) spends about 9 s building luaotfload's font cache, which was enough to hit Overleaf's free compile limit. Hence the XeLaTeX default.
+- **latexmk ran a needless fourth pass** because biblatex rewrites `main.run.xml` on every run. `$hash_calc_ignore_pattern{'xml'}` in `latexmkrc` stops that. glossaries' `automake` option also costs a pass; the `makeindex` rule in `latexmkrc` replaces it.
 - A harmless `Font shape TU/lmr/bx/sc undefined` warning comes from `leipzig.tex` measuring text before the real fonts are set.
 
 ## Open questions and unverified points
