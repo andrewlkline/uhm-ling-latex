@@ -28,6 +28,8 @@ scripts/install-local.sh
 
 This symlinks `src/` into your TEXMFHOME (`~/Library/texmf/tex/latex/uhm-ling`), so `\documentclass{uhmqp}` works in any folder and edits in `src/` apply everywhere. Copy only `templates/qp/` (or `templates/diss/`) into a new project. Undo with `scripts/install-local.sh --remove`. A project that also contains copies of the class files uses those copies, because the current folder is searched first.
 
+**Positron / VS Code (LaTeX Workshop):** each template has a `.vscode/settings.json` that makes saving the file build with `latexmk`, so the folder's `latexmkrc` chooses LuaLaTeX. Open the template's own folder (not a parent folder) as the workspace so this setting applies.
+
 ## Requirements
 
 - **Engine:** LuaLaTeX (the default) or XeLaTeX, both tested. The packages use `fontspec` and refuse to run under pdfLaTeX. LuaLaTeX is the default because the dissertation's `check` option needs it, and microtype font expansion works only in LuaLaTeX. LangSci itself uses XeLaTeX, and everything here also compiles with it. To switch, set `$pdf_mode = 5;` in `latexmkrc`.
@@ -221,6 +223,7 @@ Overfull boxes are reported but do not fail the run. Last full run (2026-11-15):
 - **biblatex resets `\bibname` at `\begin{document}`.** The dissertation uses its own `\uhmdissRefName` and `\referencesname{}`. The TOC/list names are likewise set `\AtBeginDocument`.
 - **`geometry` does not parse `1in+4pt`.** Use `1.06in`.
 - **Don't check margins with `pdftotext -bbox`.** Its boxes come from font ascent/descent metrics, not ink, and XeTeX embeds those differently from LuaTeX, so a compliant XeLaTeX PDF appears to violate the margin by 1–2pt. `check-margins.py` rasterises instead.
+- **biber on macOS 26: "extracting arm64 binary with lipo failed".** TeX Live 2025's universal `biber` launcher calls `lipo -extract_family`, which current Xcode's `lipo` lacks. Workaround: extract the arm64 binary once (`lipo /Library/TeX/texbin/biber -thin arm64 -output ~/Library/TeX/biber-arm64`) and point latexmk at it in `~/.latexmkrc` (`$biber = "\"$ENV{HOME}/Library/TeX/biber-arm64\" %O %S";`). Any editor recipe that calls `biber` directly needs the same path. This is a machine problem, not a template problem.
 - A harmless `Font shape TU/lmr/bx/sc undefined` warning comes from `leipzig.tex` measuring text before the real fonts are set.
 
 ## Open questions and unverified points

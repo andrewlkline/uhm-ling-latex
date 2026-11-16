@@ -1,0 +1,16 @@
+{
+  // LaTeX Workshop (Positron / VS Code): build with latexmk and let this
+  // folder's latexmkrc choose the engine (LuaLaTeX) and run Biber.
+  "latex-workshop.latex.recipes": [
+    { "name": "latexmk (project latexmkrc)", "tools": ["latexmk-rc"] }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk-rc",
+      "command": "latexmk",
+      "args": ["-synctex=1", "-interaction=nonstopmode", "-file-line-error", "%DOC%"]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "latexmk (project latexmkrc)",
+  "latex-workshop.latex.autoBuild.run": "onSave"
+}
