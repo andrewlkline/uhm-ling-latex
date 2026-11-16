@@ -1,0 +1,30 @@
+# Build output
+build/
+dist/
+
+# LaTeX auxiliary files
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.glg
+*.glo
+*.gls
+*.ist
+*.log
+*.out
+*.run.xml
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.xdv
+templates/**/*.pdf
+
+# Reference material: journal style sheets, templates and published
+# articles are copyrighted and stay local (see README).
+reference/
+
+.DS_Store

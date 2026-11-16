@@ -1,0 +1,62 @@
+% !TEX program = lualatex
+% !BIB program = biber
+%% Dissertation template, UHM Linguistics.
+%% Follows the UHM Graduate Education eTD Style & Policy Guide (Oct. 2018).
+%% Compile with LuaLaTeX + Biber:   latexmk main.tex
+%% Before submitting, compile once with the "check" option and read the
+%% "uhmdiss check" lines in the log (hyphenation and type-size report).
+\documentclass[
+  bibfile = references.bib,
+  % font     = libertinus,   % default: charis
+  % fontsize = 11pt,         % default: 12pt
+  % floatnumbers = continuous, % default: by chapter (Table 4.1)
+  % justified,               % default: ragged right
+  % check,                   % margin frame + hyphenation/type-size report
+]{uhmdiss}
+
+\newleipzig{rdp}{rdp}{reduplication}
+
+%% Title page (Sample B in the eTD guide)
+\title{Title of the dissertation}
+\author{Full Name}
+\field{Linguistics}
+\graduation{August}{2027}          % May, August or December only
+\chair{Chair Name}
+\member{Member Name}
+\member{Member Name}
+\member{Member Name}
+\universityrep{University Representative Name}
+\keywords{keyword one, keyword two, keyword three, keyword four}
+
+\begin{document}
+
+%% ---------------- Front matter (roman page numbers) ----------------
+\maketitle
+\copyrightpage                      % optional
+\dedication{Dedication (optional).} % optional
+
+\begin{acknowledgments}
+Placeholder.
+\end{acknowledgments}
+
+\begin{abstract}
+Placeholder.
+\end{abstract}
+
+\tableofcontents
+\listoftables
+\listoffigures
+\listofabbreviations                % optional
+
+%% ---------------- Main matter (arabic page numbers) ----------------
+\mainmatter
+\include{chapters/introduction}
+\include{chapters/data}
+
+%% ---------------- Back matter ----------------
+\appendix
+\include{chapters/appendix}
+
+\printbibliography
+
+\end{document}

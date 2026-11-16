@@ -1,0 +1,80 @@
+%% uhmqp-profile-ldc.def
+%% Language Documentation & Conservation (NFLRC, University of Hawaiʻi).
+%% Modelled on published articles (vol. 20, 2026; InDesign, Gentium Plus,
+%% US letter) and the LD&C Word template / style notes:
+%%   - paragraphs not indented, space between paragraphs
+%%   - bold sentence-case headings "1. Introduction", no extra space after
+%%   - captions "Table 1." / "Figure 1." with bold label, centred;
+%%     tables: top, header and bottom rules only, no vertical rules
+%%   - table notes directly below the table, centred
+%%   - references: Unified Style Sheet (Generic Style Rules), Chicago
+%%     where these are silent
+%% No journal branding is reproduced; \qpnote fills the footer slot.
+\ProvidesFile{uhmqp-profile-ldc.def}[2026/11/15 v0.1 uhmqp profile: LD&C]
+
+\KOMAoptions{fontsize=10pt, twoside=false, parskip=half-, numbers=enddot}
+\linespread{1.08}
+\geometry{letterpaper, top=1in, bottom=1in, left=0.85in, right=0.85in,
+          headsep=0.3in, footskip=0.45in}
+\uhmDefaultFont{gentium}
+
+%% Headings: bold serif, sentence case, generous space before
+\setkomafont{sectioning}{\normalfont\bfseries}
+\RedeclareSectionCommand[afterindent=false, beforeskip=2.2\baselineskip, afterskip=.6\baselineskip,
+  font=\Large]{section}
+\RedeclareSectionCommand[afterindent=false, beforeskip=1.6\baselineskip, afterskip=.5\baselineskip,
+  font=\Large]{subsection}
+\RedeclareSectionCommand[afterindent=false, beforeskip=1.2\baselineskip, afterskip=.4\baselineskip,
+  font=\large]{subsubsection}
+\RedeclareSectionCommand[beforeskip=1\baselineskip, afterskip=-1em,
+  font=\normalsize]{paragraph}
+
+%% Title block: a narrow metadata column on the left (holding \qpnote),
+%% title, author, affiliation and abstract on the right
+\renewcommand\uhmqpMakeTitle{%
+  \begingroup
+  \setlength{\parskip}{0pt}%
+  \vspace*{1.2in}%
+  \noindent
+  \begin{minipage}[t]{.27\textwidth}
+    \raggedright\small
+    \uhmqpIfSet\uhmqpNote{\uhmqpNote\par}{}%
+    \uhmqpIfSet\uhmqpKeywords{\medskip\textbf{Keywords}\par\uhmqpKeywords\par}{}%
+  \end{minipage}\hfill
+  \begin{minipage}[t]{.69\textwidth}
+    \raggedright
+    {\usekomafont{disposition}\LARGE\@title\par}%
+    \vskip 1.2\baselineskip
+    {\large\def\and{, }\@author\par}%
+    \uhmqpIfSet\uhmqpAffiliation
+      {\vskip .2\baselineskip{\small\itshape\def\and{, }\uhmqpAffiliation\par}}{}%
+    \uhmqpIfSet\uhmqpAbstract
+      {\vskip 1.5\baselineskip{\small\uhmqpAbstract\par}}{}%
+  \end{minipage}%
+  \par\vskip 3\baselineskip
+  \endgroup
+}
+
+%% Running head: italic short title left, page number right;
+%% \qpnote right in the footer (where LD&C prints the volume line)
+\clearpairofpagestyles
+\ihead{\textit{\small\uhmqpHeadTitle}}
+\ohead{\small\pagemark}
+\ofoot{\small\uhmqpNote}
+\renewpairofpagestyles{uhmqpfirst}{}
+
+%% Captions: "Table 2. Consonant phonemes", bold label, centred
+\captionsetup{font=normalsize, labelfont=bf, labelsep=period, justification=centering}
+\setcapindent{0pt}
+
+%% Footnotes: smaller, superscript number in the note
+\setkomafont{footnote}{\small}
+\deffootnote[1.2em]{1.2em}{1em}{\textsuperscript{\thefootnotemark}\enskip}
+
+%% Bibliography: space between entries, modest hanging indent
+\ifcsname bibitemsep\endcsname
+  \setlength{\bibitemsep}{.5\baselineskip}
+  \setlength{\bibhang}{0.3in}
+\fi
+
+\AtBeginDocument{\examplesroman}

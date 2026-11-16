@@ -1,0 +1,46 @@
+\chapter{Data}\label{ch:data}
+
+Placeholder. See \cref{tab:sample} and \cref{fig:sample}.
+
+\section{Tables and figures}
+
+\begin{table}
+  \centering
+  \caption{Sample table}\label{tab:sample}
+  \begin{threeparttable}
+  \begin{tabular}{lll}
+    \toprule
+    Form & Gloss & Note \\
+    \midrule
+    \form{ta} & \gloss{go} & regular \\
+    \form{ku} & \gloss{house} & loan\tnote{a} \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}
+    \item[a] Table notes use letters or symbols, never numbers.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=.6\textwidth]{example-image}
+  \caption{Sample figure}\label{fig:sample}
+\end{figure}
+
+\section{A long table}
+A table that runs over several pages repeats its caption as
+``Table N. (Continued) ...''.
+
+\begin{longtable}{lll}
+  \caption{A long table}\label{tab:long}\\
+  \toprule Form & Gloss & Note \\ \midrule
+  \endfirsthead
+  \continuedcaption{A long table}\\
+  \toprule Form & Gloss & Note \\ \midrule
+  \endhead
+  \bottomrule
+  \endlastfoot
+  \form{ta} & \gloss{go} & regular \\
+  \form{ku} & \gloss{house} & loan \\
+\end{longtable}

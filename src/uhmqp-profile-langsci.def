@@ -1,0 +1,52 @@
+%% uhmqp-profile-langsci.def
+%% Default profile: a paper in the style of a Language Science Press
+%% chapter (langscibook, output=paper), without LSP branding.
+%% Layout values are taken from langscibook.cls (LPPL 1.3c).
+\ProvidesFile{uhmqp-profile-langsci.def}[2026/11/15 v0.1 uhmqp profile: Language Science Press]
+
+%% Page: 170 x 240 mm, the LSP book format
+\KOMAoptions{fontsize=11pt, twoside=true}
+\geometry{papersize={170mm,240mm}, top=27.4mm, bottom=25mm,
+          inner=20.5mm, outer=24.5mm, marginparwidth=50pt,
+          headsep=8mm}
+\uhmDefaultFont{libertinus}
+
+%% Headings: bold serif, "1 Introduction"
+\setkomafont{sectioning}{\normalcolor\bfseries}
+\KOMAoptions{numbers=noenddot}
+
+%% Title block: like an LSP chapter opening
+\renewcommand\uhmqpMakeTitle{%
+  \begingroup
+  \raggedright
+  {\usekomafont{disposition}\huge\@title\par}%
+  \vskip 1.5\baselineskip
+  {\Large\def\and{\\}\@author\par}%
+  \uhmqpIfSet\uhmqpAffiliation
+    {\vskip .3\baselineskip{\normalsize\def\and{\\}\uhmqpAffiliation\par}}{}%
+  \vskip 1.15\baselineskip
+  \uhmqpIfSet\uhmqpAbstract
+    {\begin{quote}\small\uhmqpAbstract
+       \uhmqpIfSet\uhmqpKeywords{\par\medskip\textit{Keywords:} \uhmqpKeywords}{}%
+     \end{quote}}{}%
+  \vskip\baselineskip
+  \endgroup
+}
+
+%% Running heads: author(s) on even pages, title on odd pages,
+%% page number in the outer footer.
+\clearpairofpagestyles
+\lehead{\textsl{\uhmqpHeadAuthor}}
+\rohead{\uhmqpHeadTitle}
+\ofoot*{\pagemark}
+\renewpairofpagestyles{uhmqpfirst}{%
+  \ofoot*{\pagemark}%
+  \ifoot{\uhmqpIfSet\uhmqpNote{\parbox[b]{.8\textwidth}{\raggedright\footnotesize\uhmqpNote}}{}}%
+}
+
+%% Captions: small, 80% of the text width (langscibook)
+\captionsetup{font={stretch=.8,small}, width=.8\textwidth, labelsep=colon}
+\setcapindent{0pt}
+
+%% Examples: upright, as in LSP books
+\AtBeginDocument{\examplesroman}

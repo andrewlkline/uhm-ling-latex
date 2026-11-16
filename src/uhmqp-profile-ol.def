@@ -1,0 +1,162 @@
+%% uhmqp-profile-ol.def
+%% Oceanic Linguistics (University of Hawaiʻi Press).
+%% Values from the OL Word template (OL-template-1.dotx, "Style
+%% reference" table) and published articles (vol. 65, 2026):
+%%   page 6 x 9 in; margins top 61pt, bottom 52pt, inside 66pt,
+%%   outside 53pt; 10pt Times with 12pt leading; paragraphs indented 12pt
+%%   title 18pt bold centred; author 12pt; affiliation 10pt small caps
+%%   abstract 9pt, indented 18pt both sides
+%%   headings run-in, followed by a period; A- and B-level bold caps,
+%%   C- and D-level bold sentence case
+%%   captions 9pt bold caps, centred, ABOVE tables, figures and maps
+%%   table contents 8pt; gloss line 8pt; example source flush right
+%%   footnotes 8pt, number not superscript, followed by a period,
+%%   12pt hanging indent; separator about 80pt
+%%   references: heading 12pt bold caps centred; list 9pt, 18pt hanging;
+%%   "———." for a repeated author; "and" not "&"; Journal 57:359-409;
+%%   chapters "In Book title, ed. by Editor, 1-20."; citations (Blust 1970:348)
+%% Font: STIX Two stands in for Times New Roman because it covers IPA.
+\ProvidesFile{uhmqp-profile-ol.def}[2026/11/15 v0.1 uhmqp profile: Oceanic Linguistics]
+
+\KOMAoptions{fontsize=10pt, twoside=true, numbers=enddot, parskip=false}
+\geometry{paperwidth=6in, paperheight=9in,
+          top=61pt, bottom=52pt, inner=66pt, outer=53pt,
+          headheight=10pt, headsep=8pt, footskip=24pt}
+\uhmDefaultFont{stix}
+\setlength{\parindent}{12pt}
+
+%% Run-in headings: "1. INTRODUCTION. Text..." / "3.1. UNMERGED *d." /
+%% "3.1.1. Sentence case."  Protect object-language words from the
+%% capitals with \NoCaseChange{...}.
+\setkomafont{sectioning}{\normalfont\normalsize\bfseries}
+\RedeclareSectionCommand[beforeskip=12pt, afterskip=-.5em, indent=0pt, font=\normalsize]{section}
+\RedeclareSectionCommand[beforeskip=9pt,  afterskip=-.5em, indent=0pt, font=\normalsize]{subsection}
+\RedeclareSectionCommand[beforeskip=6pt,  afterskip=-.5em, indent=0pt, font=\normalsize]{subsubsection}
+\RedeclareSectionCommand[beforeskip=6pt,  afterskip=-.5em, indent=0pt, font=\normalsize]{paragraph}
+\renewcommand*{\sectioncatchphraseformat}[4]{%
+  \hskip #2#3%
+  \Ifstr{#1}{section}{\MakeUppercase{#4}}{%
+    \Ifstr{#1}{subsection}{\MakeUppercase{#4}}{#4}}.%
+}
+
+%% Title block
+\newcommand*\uhmqp@olmarks{{\textdagger},{\textdaggerdbl},{\#},{\S},{\textbardbl},{\P}}
+\renewcommand\uhmqpMakeTitle{%
+  \begingroup
+  \centering
+  \vspace*{33pt}%
+  {\leftskip 18pt plus 1fil\rightskip 18pt plus 1fil\parfillskip\z@
+   \fontsize{18pt}{20pt}\selectfont\bfseries\@title\par}%
+  \vskip 12pt
+  {\fontsize{12pt}{14pt}\selectfont\def\and{, }\@author\par}%
+  \uhmqpIfSet\uhmqpAffiliation
+    {\vskip 9pt{\scshape\def\and{, }\MakeLowercase{\uhmqpAffiliation}\par}}{}%
+  \uhmqpIfSet\uhmqpAbstract
+    {\vskip 14pt
+     {\leftskip 18pt\rightskip 18pt\parfillskip\z@ plus 1fil
+      \fontsize{9pt}{11pt}\selectfont\uhmqpAbstract\par
+      \uhmqpIfSet\uhmqpKeywords{\vskip 6pt\noindent\textbf{Keywords:} \uhmqpKeywords\par}{}}}{}%
+  \vskip 18pt
+  \endgroup
+}
+
+%% Running heads (small caps): authors on even pages, short title on odd
+%% pages; page numbers outside. First page: \qpnote in the footer (7pt).
+\clearpairofpagestyles
+\lehead{\small\pagemark}
+\rehead{\textsc{\MakeLowercase{\uhmqpHeadAuthor}}}
+\lohead{\textsc{\MakeLowercase{\uhmqpHeadTitle}}}
+\rohead{\small\pagemark}
+\renewpairofpagestyles{uhmqpfirst}{%
+  \ifoot{\uhmqpIfSet\uhmqpNote{\parbox[b]{\textwidth}{\fontsize{7pt}{8.5pt}\selectfont\uhmqpNote}}{}}%
+}
+
+%% Captions: 9pt bold caps, centred, above tables AND figures
+\DeclareCaptionLabelFormat{olupper}{\MakeUppercase{#1}~#2}
+\DeclareCaptionTextFormat{olupper}{\MakeUppercase{#1}}
+\captionsetup{font={small,bf}, labelfont=bf, labelformat=olupper, textformat=olupper,
+              labelsep=period, justification=centering, width=\textwidth}
+\floatsetup[figure]{capposition=top}
+\floatsetup[table]{capposition=top, font=footnotesize}
+
+%% Footnotes: 8pt, "1. Text", 12pt hanging indent, 80pt separator
+\setkomafont{footnote}{\footnotesize}
+\deffootnote[12pt]{12pt}{12pt}{\thefootnotemark.\enskip}
+\setfootnoterule[.4pt]{80pt}
+
+%% Examples: upright; gloss line 8pt; 3pt around examples
+\renewcommand{\glossfont}{\footnotesize\upshape}
+\AtBeginDocument{\examplesroman}
+
+%% Cross-references: OL lowercases "table 2", "figure 1", "section 3"
+\crefname{table}{table}{tables}
+\crefname{figure}{figure}{figures}
+\crefformat{section}{section~#2#1#3}
+\crefformat{subsection}{section~#2#1#3}
+\crefformat{subsubsection}{section~#2#1#3}
+
+%% ------------------------------------------------------------------
+%% Bibliography (only if biblatex is loaded)
+%% ------------------------------------------------------------------
+\ifcsname DeclareBibliographyDriver\endcsname
+  %% Heading: REFERENCES, 12pt bold caps, centred
+  \defbibheading{bibliography}[\refname]{%
+    \par\vskip 28pt
+    {\centering\fontsize{12pt}{14pt}\selectfont\bfseries\MakeUppercase{#1}\par}%
+    \vskip 12pt
+    \addcontentsline{toc}{section}{#1}}
+  \renewcommand*{\bibfont}{\fontsize{9pt}{11pt}\selectfont}
+  \setlength{\bibhang}{18pt}
+  \setlength{\bibitemsep}{0pt}
+  %% Citations: (Blust 1970:348-49), no space after the colon
+  \renewcommand*{\postnotedelim}{\addcolon}
+  %% "and", not "&"; serial comma in the reference list
+  \renewcommand*{\finalnamedelim}{%
+    \ifbibliography{\ifnumgreater{\value{liststop}}{1}{\addcomma}{}}{}%
+    \addspace\bibstring{and}\space}
+  \renewcommand*{\finallistdelim}{\addspace\bibstring{and}\space}
+  %% Repeated author -> ———.
+  \ExecuteBibliographyOptions{dashed=true}
+  \renewcommand*{\bibnamedash}{\textemdash\textemdash\textemdash}
+  %% Page ranges abbreviated in Chicago style (approximation): 131-34
+  \setcounter{mincompwidth}{10}
+  \DeclareFieldFormat{pages}{\mkcomprange{#1}}
+  \DeclareFieldFormat{postnote}{\mkcomprange{#1}}
+  %% Journal articles: Journal 57:359-409, or with issue 94(2): 205-9
+  \renewbibmacro*{note+pages}{%
+    \printfield{note}%
+    \ifentrytype{article}
+      {\iffieldundef{number}{\setunit{\addcolon}}{\setunit{\addcolon\space}}}
+      {\setunit{\addcomma\space}}%
+    \printfield{pages}%
+    \newunit}
+  %% Chapters: In Book title, ed. by Editor Name, 1-20. Series. Place: Publisher.
+  \DeclareBibliographyDriver{incollection}{%
+    \usebibmacro{bibindex}%
+    \usebibmacro{begentry}%
+    \usebibmacro{author/translator+others}%
+    \setunit{\labelnamepunct}\newblock
+    \usebibmacro{title}%
+    \newunit\newblock
+    \bibstring{in}\space
+    \usebibmacro{maintitle+booktitle}%
+    \ifnameundef{editor}{}{%
+      \setunit{\addcomma\space}%
+      \bibstring{byeditor}\space
+      \printnames[byeditor]{editor}%
+      \clearname{editor}}%
+    \setunit{\addcomma\space}%
+    \printfield{pages}%
+    \newunit\newblock
+    \printfield{series}%
+    \setunit{\addspace}\printfield{number}%
+    \newunit\newblock
+    \usebibmacro{publisher+location+date}%
+    \newunit\newblock
+    \usebibmacro{doi+eprint+url}%
+    \newunit\newblock
+    \usebibmacro{addendum+pubstate}%
+    \setunit{\bibpagerefpunct}\newblock
+    \usebibmacro{pageref}%
+    \usebibmacro{finentry}}
+\fi

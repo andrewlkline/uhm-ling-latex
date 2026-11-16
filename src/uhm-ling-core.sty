@@ -1,0 +1,312 @@
+%% uhm-ling-core.sty
+%% Shared settings for the UHM Linguistics LaTeX classes (uhmqp, uhmdiss).
+%% Can also be loaded on its own:  \usepackage[font=charis]{uhm-ling-core}
+%%
+%% Requires LuaLaTeX or XeLaTeX (fontspec). All fonts are loaded by file
+%% name from a standard TeX Live installation (which Overleaf uses), so a
+%% document compiles identically on any machine with TeX Live >= 2023.
+%%
+%% Licence: LPPL 1.3c or later.
+\NeedsTeXFormat{LaTeX2e}[2022/06/01]
+\ProvidesPackage{uhm-ling-core}[2026/11/15 v0.1 UHM Linguistics shared settings]
+
+%% ------------------------------------------------------------------
+%% Options
+%% ------------------------------------------------------------------
+%%   font=charis|libertinus|gentium|stix|noto|none
+%%       Main font. Empty (default) = use the profile's/class's choice,
+%%       falling back to charis. "none" = load no fonts (set them yourself).
+%%   bib=true|false            load biblatex (langsci-unified style)
+%%   bibfile=<file.bib>        shorthand for \addbibresource{<file.bib>}
+%%   abbreviations=true|false  automatic list of gloss abbreviations
+%%                             (leipzig + glossaries)
+%%   lgr=true|false            also load langsci-lgr (\SG, \PL, ... macros)
+%%   links=color|black         hyperlink colour (black for the dissertation)
+\newif\ifuhm@bib          \uhm@bibtrue
+\newif\ifuhm@abbrevs      \uhm@abbrevstrue
+\newif\ifuhm@lgr          \uhm@lgrfalse
+\newcommand*\uhm@font@user{}
+\newcommand*\uhm@links{color}
+\newcommand*\uhm@bibfile{}
+\DeclareKeys[uhm]{
+  font.store          = \uhm@font@user,
+  bib.if              = uhm@bib,
+  bibfile.store       = \uhm@bibfile,
+  abbreviations.if    = uhm@abbrevs,
+  lgr.if              = uhm@lgr,
+  links.store         = \uhm@links,
+}
+\ProcessKeyOptions[uhm]
+
+\RequirePackage{iftex}
+\ifTUTeX\else
+  \PackageError{uhm-ling-core}
+    {This package needs LuaLaTeX or XeLaTeX}
+    {Switch the compiler to LuaLaTeX (recommended) or XeLaTeX.
+     On Overleaf: Menu > Settings > Compiler.}
+\fi
+
+%% ------------------------------------------------------------------
+%% Basic packages
+%% ------------------------------------------------------------------
+\RequirePackage{etoolbox}
+\RequirePackage{xspace}       % needed by langsci-lgr
+\RequirePackage{fontspec}
+\RequirePackage{graphicx}
+\RequirePackage{xcolor}
+\RequirePackage{booktabs}
+\RequirePackage{tabularx}
+\RequirePackage{multirow}
+\RequirePackage{threeparttable}% table notes with letters/symbols: \tnote{a}
+\RequirePackage{pdflscape}    % landscape pages for wide tables
+\RequirePackage{caption}
+\RequirePackage[hyphens]{url}
+\urlstyle{same}
+\RequirePackage[autostyle]{csquotes}
+
+%% ------------------------------------------------------------------
+%% Fonts
+%% ------------------------------------------------------------------
+%% Each font set is a macro \uhm@fontset@<name>. A class or profile picks
+%% a default with \uhmDefaultFont{<name>}; the user's font= option wins.
+%% The choice is applied at \begin{document}.
+%%
+%% To add a font set, define \uhm@fontset@<name> following the pattern
+%% below and use font=<name>.
+\newcommand*\uhm@font@default{charis}
+\newcommand*\uhmDefaultFont[1]{\renewcommand*\uhm@font@default{#1}}
+\newcommand*\uhmFontName{}% the font set actually used (for the log/README)
+
+\newcommand*\uhm@mono{%
+  \setmonofont{DejaVuSansMono}[
+    Extension = .ttf, Scale = MatchLowercase,
+    UprightFont = *, BoldFont = *-Bold,
+    ItalicFont = *-Oblique, BoldItalicFont = *-BoldOblique]%
+}
+\newcommand*\uhm@sans@arimo{%
+  \setsansfont{Arimo}[
+    Extension = .ttf, Scale = MatchLowercase,
+    UprightFont = *-Regular, BoldFont = *-Bold,
+    ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic]%
+}
+
+%% Charis SIL (TeX Live package "charissil"; OFL). Andy's default.
+\newcommand*\uhm@fontset@charis{%
+  \setmainfont{CharisSIL}[
+    Extension = .ttf, Ligatures = TeX,
+    UprightFont = *-Regular, BoldFont = *-Bold,
+    ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic]%
+  \uhm@sans@arimo \uhm@mono
+}
+%% Libertinus (TeX Live package "libertinus-fonts"; OFL). LangSci's font.
+\newcommand*\uhm@fontset@libertinus{%
+  \setmainfont{LibertinusSerif}[
+    Extension = .otf, Ligatures = {TeX,Common},
+    UprightFont = *-Regular, BoldFont = *-Semibold,
+    ItalicFont = *-Italic, BoldItalicFont = *-SemiboldItalic]%
+  \setsansfont{LibertinusSans}[
+    Extension = .otf, Scale = MatchLowercase,
+    UprightFont = *-Regular, BoldFont = *-Bold,
+    ItalicFont = *-Italic, BoldItalicFont = *-Bold]%
+  \uhm@mono
+}
+%% Gentium Plus (TeX Live package "gentium-sil"; OFL). LD&C's font.
+\newcommand*\uhm@fontset@gentium{%
+  \setmainfont{GentiumPlus}[
+    Extension = .ttf, Ligatures = TeX,
+    UprightFont = *-Regular, BoldFont = *-Bold,
+    ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic]%
+  \uhm@sans@arimo \uhm@mono
+}
+%% STIX Two Text (TeX Live package "stix2-otf"; OFL). A Times-like face
+%% that, unlike TeX Gyre Termes, covers IPA. Stands in for Times New Roman.
+\newcommand*\uhm@fontset@stix{%
+  \setmainfont{STIXTwoText}[
+    Extension = .otf, Ligatures = TeX,
+    UprightFont = *-Regular, BoldFont = *-Bold,
+    ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic]%
+  \uhm@sans@arimo \uhm@mono
+}
+%% Noto Serif + Fira Sans (TeX Live "noto", "fira"; OFL). Approximates the
+%% current De Gruyter journal design.
+\newcommand*\uhm@fontset@noto{%
+  \setmainfont{NotoSerif}[
+    Extension = .ttf, Ligatures = TeX,
+    UprightFont = *-Regular, BoldFont = *-Bold,
+    ItalicFont = *-Italic, BoldItalicFont = *-BoldItalic]%
+  \setsansfont{FiraSans}[
+    Extension = .otf, Scale = MatchLowercase,
+    UprightFont = *-Regular, BoldFont = *-SemiBold,
+    ItalicFont = *-Italic, BoldItalicFont = *-SemiBoldItalic]%
+  \uhm@mono
+}
+\newcommand*\uhm@fontset@none{}
+
+\AddToHook{begindocument/before}[uhm-ling-core]{%
+  \ifx\uhm@font@user\@empty
+    \edef\uhmFontName{\uhm@font@default}%
+  \else
+    \edef\uhmFontName{\uhm@font@user}%
+  \fi
+  \ifcsname uhm@fontset@\uhmFontName\endcsname
+    \csname uhm@fontset@\uhmFontName\endcsname
+  \else
+    \PackageError{uhm-ling-core}{Unknown font set `\uhmFontName'}
+      {Known sets: charis, libertinus, gentium, stix, noto, none.}%
+  \fi
+  \typeout{uhm-ling-core: main font set = \uhmFontName}%
+}
+
+%% Microtype: protrusion (and expansion under LuaLaTeX) improves
+%% justified and ragged text alike.
+\RequirePackage{microtype}
+\frenchspacing
+
+%% ------------------------------------------------------------------
+%% Paragraph and page-break discipline
+%% ------------------------------------------------------------------
+%% No widows or orphans (also required by Graduate Division).
+\clubpenalty=10000
+\widowpenalty=10000
+\displaywidowpenalty=10000
+%% Discourage consecutive hyphenated lines and a hyphen on the last full
+%% line of a paragraph or page.
+\doublehyphendemerits=100000
+\finalhyphendemerits=50000
+\brokenpenalty=5000
+
+%% ------------------------------------------------------------------
+%% Linguistic examples and glossing
+%% ------------------------------------------------------------------
+%% langsci-gb4e: \ea ... \z, \gll, \glt, \ex, sub-examples \ea \ex \z.
+\RequirePackage{langsci-gb4e}
+\ifuhm@lgr \RequirePackage{langsci-lgr}\fi
+
+%% ------------------------------------------------------------------
+%% Bibliography: Unified Style Sheet for Linguistics via langsci-unified
+%% ------------------------------------------------------------------
+\ifuhm@bib
+  \RequirePackage[
+    backend      = biber,
+    style        = langsci-unified,
+    natbib       = true,
+    maxcitenames = 2,     % 3+ authors -> "et al." in citations
+    mincitenames = 1,
+    maxbibnames  = 99,    % never "et al." in the reference list
+    uniquename   = false,
+    uniquelist   = false,
+    isbn         = false,
+  ]{biblatex}
+  \ifx\uhm@bibfile\@empty\else \addbibresource{\uhm@bibfile}\fi
+  %% Pages in postnotes without "p."/"pp.": (Author Year: 23-25)
+  \DeclareFieldFormat{postnote}{#1}
+  \DeclareFieldFormat{multipostnote}{#1}
+  %% Hanging indent of one-half inch (Unified Style Sheet)
+  \setlength{\bibhang}{0.5in}
+  %% Let long URLs/DOIs break at letters and numbers, not only at "/"
+  \setcounter{biburlnumpenalty}{9000}
+  \setcounter{biburllcpenalty}{9000}
+  \setcounter{biburlucpenalty}{9000}
+  %% DOIs as full https://doi.org/ links (the Unified Style Sheet does
+  %% not cover DOIs; this follows its recommendation for URLs).
+  \definecolor{lsDOIGray}{gray}{0}% expected by langsci-unified
+  \DeclareFieldFormat{doi}{\url{https://doi.org/#1}}
+  %% Data citation (Troms\o{} Recommendations): @dataset entries.
+  %% Author. Date. Title. Publisher. Locator. Version. (Accessed date.)
+  \DeclareBibliographyDriver{dataset}{%
+    \usebibmacro{bibindex}%
+    \usebibmacro{begentry}%
+    \usebibmacro{author/editor+others/translator+others}%
+    \setunit{\labelnamepunct}\newblock
+    \usebibmacro{title}%
+    \newunit\newblock
+    \printfield{type}%
+    \newunit\newblock
+    \printlist{publisher}%
+    \newunit\newblock
+    \printfield{doi}%
+    \newunit\newblock
+    \printfield{url}%
+    \newunit\newblock
+    \printfield{version}%
+    \iffieldundef{urlyear}{}{%
+      \setunit*{\addspace}%
+      \printtext[parens]{accessed \mkbibdateunified{urlyear}{urlmonth}{urlday}}}%
+    \newunit\newblock
+    \usebibmacro{addendum+pubstate}%
+    \setunit{\bibpagerefpunct}\newblock
+    \usebibmacro{pageref}%
+    \usebibmacro{finentry}}
+  \DeclareFieldFormat[dataset]{version}{Version #1}
+\fi
+
+%% Source of an example, after the translation:
+%%   \glt `I go home.' \exsource{Edwards 2020: 270}
+%% Default: flush right on the translation line (classes/profiles may
+%% redefine it, e.g. to put the source on its own line).
+\newcommand\exsource[1]{\unskip\hfill\mbox{(#1)}}
+
+%% ------------------------------------------------------------------
+%% Small helpers (Generic Style Rules conventions)
+%% ------------------------------------------------------------------
+%%   \form{ta-wa}   object-language form, italic
+%%   \gloss{go}     gloss/meaning in single quotes: 'go'
+%%   \term{clitic}  technical term at first definition, small caps
+%%   \grapheme{q}   grapheme in angle brackets: <q>
+\providecommand*\form[1]{\textit{#1}}
+\providecommand*\gloss[1]{\textquoteleft#1\textquoteright}
+\providecommand*\term[1]{\textsc{#1}}
+%% Angle brackets: U+27E8/U+27E9 from the text font, falling back to math.
+\newcommand*\uhm@langle{\iffontchar\font"27E8 \symbol{"27E8}\else\ensuremath{\langle}\fi}
+\newcommand*\uhm@rangle{\iffontchar\font"27E9 \symbol{"27E9}\else\ensuremath{\rangle}\fi}
+\providecommand*\grapheme[1]{\uhm@langle#1\uhm@rangle}
+
+%% ------------------------------------------------------------------
+%% Hyperlinks and cross-references (loaded last; classes may load
+%% further packages before \begin{document})
+%% ------------------------------------------------------------------
+\RequirePackage{hyperref}
+\ifdefstring{\uhm@links}{black}
+  {\hypersetup{hidelinks}}
+  {\hypersetup{colorlinks=true, linkcolor=uhmlink, citecolor=uhmlink,
+               urlcolor=uhmlink, filecolor=uhmlink}}
+\definecolor{uhmlink}{RGB}{0,70,140}
+\hypersetup{bookmarksnumbered=true, pdfcreator={LaTeX (uhm-ling-latex)}}
+%% ------------------------------------------------------------------
+%% Abbreviations list (Leipzig Glossing Rules abbreviations)
+%% ------------------------------------------------------------------
+%% With abbreviations=true, \Sg, \Pl, \Erg, ... (and your own
+%% \newleipzig{evid}{evid}{evidential}) print in small caps and are
+%% collected; \printglosses prints the list. Needs makeindex, which
+%% glossaries runs itself (option automake). latexmk and Overleaf both
+%% handle this; it takes one extra compile for the list to appear.
+\ifuhm@abbrevs
+  \RequirePackage[automake=immediate,nonumberlist,nopostdot,nogroupskip,toc]{glossaries}
+  \RequirePackage{glossary-inline,glossary-tree,glossary-mcols}
+  \RequirePackage[block]{leipzig}% two-column list with an "Abbreviations" heading
+  \makeglossaries
+\else
+  \RequirePackage[noglossaries]{leipzig}
+\fi
+
+\RequirePackage[nameinlink,noabbrev]{cleveref}
+%% Examples: "(3)", "(3a)"; ranges "(3)-(5)"
+\crefformat{xnumi}{(#2#1#3)}
+\crefformat{xnumii}{(#2#1#3)}
+\crefformat{xnumiii}{(#2#1#3)}
+\crefrangeformat{xnumi}{(#3#1#4)--(#5#2#6)}
+\crefrangeformat{xnumii}{(#3#1#4)--(#5#2#6)}
+\Crefformat{xnumi}{(#2#1#3)}
+\Crefformat{xnumii}{(#2#1#3)}
+%% Sections with the section sign (Generic Style Rules): "§2.3"
+\crefformat{section}{#2\S#1#3}
+\crefformat{subsection}{#2\S#1#3}
+\crefformat{subsubsection}{#2\S#1#3}
+\crefmultiformat{section}{#2\S\S#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\Crefformat{section}{#2\S#1#3}
+\Crefformat{subsection}{#2\S#1#3}
+\Crefformat{subsubsection}{#2\S#1#3}
+\crefname{footnote}{footnote}{footnotes}
+\Crefname{footnote}{Footnote}{Footnotes}
+
+\endinput

@@ -1,0 +1,101 @@
+%% uhmqp-profile-stuf.def
+%% STUF - Language Typology and Universals (De Gruyter Brill / Mouton).
+%% Manuscript rules: De Gruyter Mouton Journal Style Sheet v1.3 (2021);
+%% page design: published articles (STUF 78, 2025; 79, 2026).
+%% The same style sheet governs Linguistic Typology, so a profile for LT
+%% can start from this file.
+%%   page 155 x 230 mm; serif text, sans-serif headings and title
+%%   headings flush left, "1 Heading", sentence case, never numbered 0
+%%   "Abstract:" and "Keywords:" as bold sans run-in labels
+%%   captions "Table 1: ..." above tables, "Figure 1: ..." below figures
+%%   cross-references "Section 4.2", "Table 3", "(2a)"
+%%   citations (Smith and Jones 1995), (Hockett 1964: 140-145); several
+%%   works by different authors in alphabetical order
+%%   example source on its own line, left-aligned with the example text
+%%   footnotes (not endnotes), appendices before the references
+%%   references: Unified Style Sheet
+\ProvidesFile{uhmqp-profile-stuf.def}[2026/11/15 v0.1 uhmqp profile: STUF / De Gruyter Mouton]
+
+\KOMAoptions{fontsize=10pt, twoside=true, numbers=noenddot, parskip=false}
+\linespread{1.12}
+\geometry{paperwidth=155mm, paperheight=230mm,
+          top=23mm, bottom=18mm, inner=21mm, outer=18mm,
+          headheight=12pt, headsep=7mm, footskip=8mm}
+\uhmDefaultFont{noto}
+
+%% Headings: bold sans, "1  Introduction"
+\setkomafont{sectioning}{\normalfont\sffamily\bfseries}
+\RedeclareSectionCommand[afterindent=false, font=\Large, beforeskip=2\baselineskip, afterskip=1\baselineskip]{section}
+\RedeclareSectionCommand[afterindent=false, font=\large, beforeskip=1.5\baselineskip, afterskip=.7\baselineskip]{subsection}
+\RedeclareSectionCommand[afterindent=false, font=\normalsize, beforeskip=1\baselineskip, afterskip=.5\baselineskip]{subsubsection}
+\renewcommand*{\sectionformat}{\thesection\autodot\quad}
+
+%% Title block: author above the title, abstract and keywords with
+%% run-in labels; a corresponding-author note at the foot of page 1
+\renewcommand\uhmqpMakeTitle{%
+  \begingroup
+  \raggedright
+  \vspace*{4mm}%
+  {\sffamily\large\def\and{, }\@author\uhmqpIfSet\uhmqpEmail{*}{}\par}%
+  \vskip 2pt
+  {\sffamily\bfseries\fontsize{19pt}{23pt}\selectfont\@title\par}%
+  \vskip 1.6\baselineskip
+  \endgroup
+  \uhmqpIfSet\uhmqpAbstract
+    {\noindent{\sffamily\bfseries Abstract:}\enskip\uhmqpAbstract\par}{}%
+  \uhmqpIfSet\uhmqpKeywords
+    {\smallskip\noindent{\sffamily\bfseries Keywords:}\enskip\uhmqpKeywords\par}{}%
+  \vskip 1.5\baselineskip
+  \uhmqpIfSet\uhmqpEmail{%
+    \begingroup
+    \renewcommand\thefootnote{}%
+    \deffootnote[0pt]{0pt}{0pt}{}%
+    \footnotetext{\textsf{\textbf{*Corresponding author: {\def\and{, }\@author}}},
+      \uhmqpIfSet\uhmqpAffiliation{{\def\and{; }\uhmqpAffiliation}, }{}%
+      E-mail: \uhmqpEmail}%
+    \endgroup}{}%
+}
+
+%% Running heads: "172 ── Author" on even pages, "Short title ── 173" on
+%% odd pages. First page: \qpnote top right above a heavy rule.
+\newcommand*\uhmqp@stufrule{\rule[.6ex]{2em}{.6pt}}
+\clearpairofpagestyles
+\lehead{\sffamily\small\textbf{\pagemark}\enskip\uhmqp@stufrule\enskip\uhmqpHeadAuthor}
+\rohead{\sffamily\small\uhmqpHeadTitle\enskip\uhmqp@stufrule\enskip\textbf{\pagemark}}
+\renewpairofpagestyles{uhmqpfirst}{%
+  \ohead{\parbox[b]{\textwidth}{\raggedleft\sffamily\footnotesize
+    \uhmqpIfSet\uhmqpNote{\uhmqpNote}{\strut}\\[2pt]
+    \rule{\textwidth}{1.2pt}}}%
+}
+
+%% Captions: "Table 1: ..." (label bold), sentence case
+\captionsetup{font=small, labelfont=bf, labelsep=colon, justification=justified,
+              singlelinecheck=true}
+
+%% Footnotes: bold number, not superscript; short heavy separator
+\setkomafont{footnote}{\footnotesize}
+\deffootnote[1.5em]{0pt}{1em}{\textbf{\thefootnotemark}\enskip}
+\setfootnoterule[1.5pt]{2em}
+
+%% Examples: upright; source on a new line below the translation
+\AtBeginDocument{\examplesroman}
+\renewcommand\exsource[1]{\\(#1)}
+
+%% Cross-references: "Section 4.2", "Table 3", "Figure 1", "(2a)"
+\crefformat{section}{Section~#2#1#3}
+\crefformat{subsection}{Section~#2#1#3}
+\crefformat{subsubsection}{Section~#2#1#3}
+\Crefformat{section}{Section~#2#1#3}
+\Crefformat{subsection}{Section~#2#1#3}
+\Crefformat{subsubsection}{Section~#2#1#3}
+\crefmultiformat{section}{Sections~#2#1#3}{ and~#2#1#3}{, #2#1#3}{ and~#2#1#3}
+\crefname{table}{Table}{Tables}
+\crefname{figure}{Figure}{Figures}
+
+%% Citations: "and" in running text, "&" in the reference list;
+%% several works by different authors sorted alphabetically
+\ifcsname DeclareBibliographyDriver\endcsname
+  \renewcommand*{\finalnamedelim}{%
+    \ifbibliography{\addspace\&\space}{\addspace\bibstring{and}\space}}
+  \ExecuteBibliographyOptions{sortcites=true}
+\fi

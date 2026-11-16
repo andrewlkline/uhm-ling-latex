@@ -1,0 +1,98 @@
+% !TEX program = lualatex
+% !BIB program = biber
+%% Qualifying-paper template, UHM Linguistics.
+%% Compile with LuaLaTeX (or XeLaTeX) + Biber. latexmk does it all:
+%%     latexmk main.tex
+%% On Overleaf the included latexmkrc selects LuaLaTeX automatically.
+%%
+%% Change the journal style with profile=  (langsci, ldc, ol, stuf, blank)
+%% Change the font with font=              (charis, libertinus, gentium, stix, noto)
+%% Omit font= to use the profile's own font.
+\documentclass[
+  profile = langsci,
+  % font  = charis,
+  bibfile = references.bib,
+  % draft,          % date stamp and overfull-line marks
+  % linenumbers,    % line numbers for committee comments
+]{uhmqp}
+
+%% Your own gloss abbreviations (beyond the Leipzig set), e.g.
+%% \newleipzig{evid}{evid}{evidential}   ->  \Evid
+\newleipzig{rdp}{rdp}{reduplication}
+
+\title{Title of the qualifying paper in sentence case}
+\shorttitle{Short title}
+\author{Author Name}
+\affiliation{University of Hawaiʻi at Mānoa}
+\email{author@hawaii.edu}
+\abstract{Abstract text (100--300 words). Placeholder.}
+\keywords{keyword one; keyword two; keyword three}
+\qpnote{Qualifying paper 1. Department of Linguistics, University of Hawaiʻi at Mānoa. Submitted Month Year.}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+Placeholder text with a citation \parencite[514--515]{murray-vennemann1983} and a
+narrative citation \textcite[238]{mccarthy-prince1999}. An object-language form
+\form{ta-wa} \gloss{go} and a grapheme \grapheme{q}.\footnote{A footnote.}
+See \cref{sec:data}, \cref{ex:basic}, \cref{tab:sample} and \cref{fig:sample}.
+
+\section{Data}\label{sec:data}
+\subsection{Glossed examples}
+
+\ea\label{ex:basic}
+  \gll ta-wa ku\\
+       \Fsg-go house\\
+  \glt `I go home.' \exsource{Source 2020: 12}
+\z
+
+\ea\label{ex:sub}
+  \ea\label{ex:sub-a}
+    \gll ta-wa ku\\
+         \Fsg-go house\\
+    \glt `I go home.'
+  \ex\label{ex:sub-b}
+    \gll ta\textasciitilde ta-wa\\
+         \Rdp\textasciitilde\Fsg-go\\
+    \glt `I keep going.'
+  \z
+\z
+Sub-examples are referred to as \cref{ex:sub-a} and \cref{ex:sub-b}.
+
+\subsection{Tables and figures}
+Placeholder text before the floats.
+\begin{table}
+  \caption{Sample table}\label{tab:sample}
+  \begin{threeparttable}
+  \begin{tabular}{lll}
+    \toprule
+    Form & Gloss & Note \\
+    \midrule
+    \form{ta} & \gloss{go} & regular \\
+    \form{ku} & \gloss{house} & loan\tnote{a} \\
+    \bottomrule
+  \end{tabular}
+  \begin{tablenotes}\footnotesize
+    \item[a] A table note uses a letter, not a number.
+  \end{tablenotes}
+  \end{threeparttable}
+\end{table}
+
+\begin{figure}
+  \includegraphics[width=.6\textwidth]{example-image}
+  \caption{Sample figure}\label{fig:sample}
+\end{figure}
+
+\section{Conclusion}
+Placeholder.
+
+\begin{paperappendix}
+\section{Additional data}\label{app:data}
+Placeholder.
+\end{paperappendix}
+
+\printglosses
+\printbibliography
+
+\end{document}

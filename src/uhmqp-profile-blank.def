@@ -1,0 +1,106 @@
+%% uhmqp-profile-blank.def
+%% A documented starting point for a new journal profile.
+%%
+%% HOW TO MAKE A PROFILE
+%%  1. Copy this file into your project folder (next to main.tex) and
+%%     rename it uhmqp-profile-<name>.def, e.g. uhmqp-profile-diachronica.def.
+%%  2. Use it with \documentclass[profile=<name>]{uhmqp}.
+%%  3. Edit the settings below. Everything is ordinary LaTeX: the file is
+%%     read after all packages are loaded (KOMA-Script scrartcl, geometry,
+%%     scrlayer-scrpage, caption, floatrow, biblatex, cleveref, ...), so any
+%%     preamble command works here.
+%%  4. Work from the journal's style sheet and two or three recently
+%%     published articles. Note the source of each value in a comment.
+%%  5. When it works, send it to the maintainer so it can be added to the
+%%     shared collection in src/.
+%%
+%% Anything you leave out keeps the class default: US letter, 1in
+%% margins, 11pt, Charis SIL, bold serif numbered headings, a centred
+%% title block, page number centred in the footer.
+\ProvidesFile{uhmqp-profile-blank.def}[2026/11/15 v0.1 uhmqp profile: blank]
+
+%% ---- 1. Page --------------------------------------------------------
+%% KOMA options: fontsize, twoside, parskip (false | half- | full-),
+%% numbers (enddot = "1." | noenddot = "1")
+\KOMAoptions{fontsize=11pt, twoside=false, parskip=false, numbers=noenddot}
+%% geometry: paper size and margins
+\geometry{letterpaper, margin=1in}
+%% Line spacing factor (1 = normal)
+% \linespread{1.05}
+
+%% ---- 2. Fonts -------------------------------------------------------
+%% One of: charis, libertinus, gentium, stix (Times-like), noto
+%% (Noto Serif + Fira Sans). The user's font= option overrides this.
+\uhmDefaultFont{charis}
+
+%% ---- 3. Headings ----------------------------------------------------
+%% Font for all headings (\sffamily for sans serif):
+\setkomafont{sectioning}{\normalfont\bfseries}
+%% Size and spacing per level. A NEGATIVE afterskip makes a run-in
+%% heading (text continues on the same line), as in Oceanic Linguistics.
+\RedeclareSectionCommand[afterindent=false, font=\Large, beforeskip=1.5\baselineskip, afterskip=.75\baselineskip]{section}
+\RedeclareSectionCommand[afterindent=false, font=\large, beforeskip=1.2\baselineskip, afterskip=.5\baselineskip]{subsection}
+\RedeclareSectionCommand[afterindent=false, font=\normalsize, beforeskip=1\baselineskip, afterskip=.5\baselineskip]{subsubsection}
+%% Number format, e.g. wider gap: \renewcommand*{\sectionformat}{\thesection\autodot\quad}
+
+%% ---- 4. Title block -------------------------------------------------
+%% Available: \@title, \@author (use \def\and{...} to set the separator),
+%% \uhmqpAffiliation, \uhmqpEmail, \uhmqpAbstract, \uhmqpKeywords,
+%% \uhmqpNote. \uhmqpIfSet\macro{if set}{if empty} tests for content.
+\renewcommand\uhmqpMakeTitle{%
+  \begin{center}
+    {\usekomafont{disposition}\LARGE\@title\par}%
+    \vskip\baselineskip
+    {\large\def\and{, }\@author\par}%
+    \uhmqpIfSet\uhmqpAffiliation{{\def\and{, }\uhmqpAffiliation\par}}{}%
+  \end{center}
+  \uhmqpIfSet\uhmqpAbstract{%
+    \begin{quote}\small\textbf{Abstract:} \uhmqpAbstract
+      \uhmqpIfSet\uhmqpKeywords{\par\medskip\textbf{Keywords:} \uhmqpKeywords}{}%
+    \end{quote}}{}%
+  \vskip\baselineskip
+}
+
+%% ---- 5. Running heads and page numbers ------------------------------
+%% scrlayer-scrpage: \ihead \chead \ohead \ifoot \cfoot \ofoot (inner,
+%% centre, outer); \lehead/\rohead etc. for even/odd pages in twoside.
+%% \uhmqpHeadTitle and \uhmqpHeadAuthor give the short title/author.
+\clearpairofpagestyles
+\ohead{\uhmqpHeadTitle}
+\cfoot*{\pagemark}
+%% First page (title page):
+\renewpairofpagestyles{uhmqpfirst}{%
+  \cfoot*{\pagemark}%
+  \ifoot{\uhmqpIfSet\uhmqpNote{\parbox[b]{.7\textwidth}{\footnotesize\uhmqpNote}}{}}%
+}
+
+%% ---- 6. Captions and floats -----------------------------------------
+%% caption package: font, labelfont, labelsep (colon | period), ...
+\captionsetup{font=small, labelfont=bf, labelsep=period}
+%% Caption position: tables above, figures below (change to top/bottom)
+\floatsetup[table]{capposition=top}
+\floatsetup[figure]{capposition=bottom}
+
+%% ---- 7. Footnotes ---------------------------------------------------
+%% \deffootnote[mark width]{indent}{paragraph indent}{mark format}
+\deffootnote[1.5em]{1.5em}{1em}{\textsuperscript{\thefootnotemark}\enskip}
+% \setfootnoterule[thickness]{length}
+
+%% ---- 8. Examples ----------------------------------------------------
+%% \examplesroman or \examplesitalics for the object-language line;
+%% \glossfont for the gloss line; \exsource for the example's source.
+\AtBeginDocument{\examplesroman}
+% \renewcommand{\glossfont}{\footnotesize\upshape}
+% \renewcommand\exsource[1]{\\(#1)}          % source on its own line
+
+%% ---- 9. Cross-references (cleveref) ---------------------------------
+%% Default: "§2.3", "(4)", "table 1". Example for "Section 2.3":
+% \crefformat{section}{Section~#2#1#3}
+
+%% ---- 10. Bibliography -----------------------------------------------
+%% The style is always langsci-unified (Unified Style Sheet); adjust here.
+\ifcsname DeclareBibliographyDriver\endcsname
+  % \renewcommand*{\postnotedelim}{\addcolon}       % (Smith 2000:12)
+  % \ExecuteBibliographyOptions{dashed=true}       % ——— for repeated authors
+  % \setlength{\bibhang}{0.5in}
+\fi
