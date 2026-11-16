@@ -10,3 +10,6 @@ ensure_path('TEXINPUTS', './uhm-ling//');
 
 # Abbreviation list (glossaries/leipzig): glossaries runs makeindex itself
 # (option automake), so no custom rule is needed here.
+
+# Let "latexmk -c" also remove the abbreviation-list (glossaries) files.
+$clean_ext .= " glg glo gls ist run.xml";
