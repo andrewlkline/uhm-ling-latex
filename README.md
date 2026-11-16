@@ -32,7 +32,7 @@ This symlinks `src/` into your TEXMFHOME (`~/Library/texmf/tex/latex/uhm-ling`),
 
 ## Requirements
 
-- **Engine:** LuaLaTeX (the default) or XeLaTeX, both tested. The packages use `fontspec` and refuse to run under pdfLaTeX. LuaLaTeX is the default because the dissertation's `check` option needs it, and microtype font expansion works only in LuaLaTeX. LangSci itself uses XeLaTeX, and everything here also compiles with it. To switch, set `$pdf_mode = 5;` in `latexmkrc`.
+- **Engine:** LuaLaTeX (the default) or XeLaTeX, both tested. On Overleaf, the project's Compiler setting (default pdfLaTeX) overrides `$pdf_mode` in `latexmkrc`, so the templates' `latexmkrc` also sets `$pdflatex = 'lualatex %O %S'`: whatever Overleaf asks for, LuaLaTeX runs. Projects made before this fix need Menu > Settings > Compiler > LuaLaTeX. The packages use `fontspec` and refuse to run under pdfLaTeX. LuaLaTeX is the default because the dissertation's `check` option needs it, and microtype font expansion works only in LuaLaTeX. LangSci itself uses XeLaTeX, and everything here also compiles with it. To switch, set `$pdf_mode = 5;` in `latexmkrc`.
 - **Bibliography:** Biber. latexmk runs it automatically.
 - **TeX Live 2023 or later.** Developed on TeX Live 2025. Overleaf runs a full TeX Live, so every package and font used here is available there.
 - **Fonts:** nothing is bundled. Every font set is loaded **by file name** from TeX Live's own font packages, so output is identical on any machine regardless of what is installed system-wide (see the table below). Andy's system "Charis" (version 7) is not used; TeX Live's Charis SIL 6.101 is.

@@ -1,6 +1,11 @@
 # latexmk configuration (also read by Overleaf).
 # LuaLaTeX + Biber. To use XeLaTeX instead, set $pdf_mode = 5.
 $pdf_mode = 4;
+# Overleaf (and some editors) call latexmk with -pdf, i.e. "use pdfLaTeX",
+# which overrides $pdf_mode above. The classes need LuaLaTeX or XeLaTeX,
+# so make the pdfLaTeX command run LuaLaTeX too. On Overleaf you can then
+# leave Menu > Compiler at its default.
+$pdflatex = 'lualatex %O %S';
 $postscript_mode = $dvi_mode = 0;
 $bibtex_use = 2;      # run biber when needed; delete .bbl on cleanup
 
