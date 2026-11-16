@@ -36,8 +36,51 @@
 \renewcommand*{\sectioncatchphraseformat}[4]{%
   \hskip #2#3%
   \Ifstr{#1}{section}{\MakeUppercase{#4}}{%
-    \Ifstr{#1}{subsection}{\MakeUppercase{#4}}{#4}}.%
+    \Ifstr{#1}{subsection}{\MakeUppercase{#4}}{#4}}%
+  \uhmqp@olheadingperiod{#4}%
 }
+%% Add the closing period unless the heading already ends in . ? or !
+%% (e.g. \paragraph{The languages.} must not print "The languages..").
+%% KOMA passes the text as \Sectionformat{<text>}{<depth>}; look inside it.
+\ExplSyntaxOn
+\cs_new:Npn \uhmqp@olheadingperiod #1
+  {
+    \tl_if_head_eq_meaning:nNTF {#1} \Sectionformat
+      { \__uhmqp_ol_unwrap:w #1 }
+      { \__uhmqp_ol_period:n {#1} }
+  }
+\cs_new:Npn \__uhmqp_ol_unwrap:w \Sectionformat #1 #2
+  { \__uhmqp_ol_period:n {#1} }
+\cs_new:Npn \__uhmqp_ol_period:n #1
+  {
+    \str_case_e:nnF { \str_item:nn {#1} { -1 } }
+      { { . } { } { ? } { } { ! } { } }
+      { . }
+  }
+\ExplSyntaxOff
+
+%% Capitals in headings and captions must not touch citation keys, label
+%% names or object-language forms (OL: "Uppercase is not used for target
+%% language words"). Wrap other forms in \NoCaseChange{...}, or register a
+%% macro of your own in the preamble: \AddToNoCaseChangeList{\fm}
+\AddToNoCaseChangeList{\cite}
+\AddToNoCaseChangeList{\textcite}
+\AddToNoCaseChangeList{\parencite}
+\AddToNoCaseChangeList{\autocite}
+\AddToNoCaseChangeList{\citeauthor}
+\AddToNoCaseChangeList{\citeyear}
+\AddToNoCaseChangeList{\citet}
+\AddToNoCaseChangeList{\citep}
+\AddToNoCaseChangeList{\citealt}
+\AddToNoCaseChangeList{\ref}
+\AddToNoCaseChangeList{\cref}
+\AddToNoCaseChangeList{\Cref}
+\AddToNoCaseChangeList{\form}
+\AddToNoCaseChangeList{\grapheme}
+
+%% Justified 10pt text on a 6 x 9 in page: allow some extra stretch before
+%% a line runs into the margin (long IPA forms, URLs)
+\setlength{\emergencystretch}{2em}
 
 %% Title block
 \newcommand*\uhmqp@olmarks{{\textdagger},{\textdaggerdbl},{\#},{\S},{\textbardbl},{\P}}

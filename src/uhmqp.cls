@@ -108,7 +108,7 @@
 
 %% Helpers for profile writers
 %%   \uhmqpIfSet{\macro}{if set}{if empty}
-\newcommand\uhmqpIfSet[3]{\ifx#1\@empty #3\else #2\fi}
+\newcommand\uhmqpIfSet[3]{\ifdefempty{#1}{#3}{#2}}% etoolbox: works for \long macros too
 %% Running-head text: the short version if given, else the full one
 \newcommand\uhmqpHeadTitle{%
   \ifx\uhmqpShortTitle\@empty \@title \else \uhmqpShortTitle \fi}
@@ -136,10 +136,14 @@
 %% ------------------------------------------------------------------
 \geometry{letterpaper, margin=1in}
 \raggedbottom
+%% Extra stretch before a justified line runs into the margin. Needed under
+%% XeLaTeX (no microtype font expansion) on narrow journal measures with long
+%% IPA forms, slashed compounds and URLs.
+\setlength{\emergencystretch}{2em}
 \setkomafont{disposition}{\normalcolor\bfseries}
 \setkomafont{descriptionlabel}{\normalfont\itshape}
 \setkomafont{pageheadfoot}{\normalfont\normalcolor}
-\setcounter{secnumdepth}{4}
+\setcounter{secnumdepth}{3}% \paragraph is an unnumbered run-in label, as in article
 \setcounter{tocdepth}{3}
 
 %% Footnotes (from langscibook)

@@ -14,6 +14,7 @@
 %% Headings: bold serif, "1 Introduction"
 \setkomafont{sectioning}{\normalcolor\bfseries}
 \KOMAoptions{numbers=noenddot}
+\setcounter{secnumdepth}{4}% LSP numbers four levels (langscibook)
 
 %% Title block: like an LSP chapter opening
 \renewcommand\uhmqpMakeTitle{%
