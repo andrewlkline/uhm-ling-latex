@@ -3,6 +3,7 @@
 # check the results. Usage:
 #   scripts/test.sh                 # everything
 #   scripts/test.sh qp ldc lualatex # one template/profile/engine
+#   scripts/test.sh book            # templates: qp, diss, book, volume
 # Output PDFs land in build/test/. Exit status is non-zero on any failure.
 set -u
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -60,5 +61,10 @@ for eng in "${ENGINES[@]}"; do
   if [ "$want_tpl" = all ] || [ "$want_tpl" = diss ]; then
     [ -d "$ROOT/templates/diss" ] && [ -f "$ROOT/templates/diss/main.tex" ] && run diss "diss-$eng" "$eng" ""
   fi
+  for t in book volume; do
+    if [ "$want_tpl" = all ] || [ "$want_tpl" = "$t" ]; then
+      run $t "$t-$eng" "$eng" ""
+    fi
+  done
 done
 exit $fail

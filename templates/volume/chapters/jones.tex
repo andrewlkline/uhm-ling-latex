@@ -1,0 +1,33 @@
+%% A chapter of the volume. Compiles on its own as a paper (cd chapters &&
+%% latexmk jones.tex); inside the book, \includepaper ignores this preamble.
+\documentclass[profile=langsci, bibfile=../references.bib]{uhmqp}
+
+\title{Title of the second chapter}
+\author{First Author \and Second Author}
+\affiliation{University One \and University Two}
+\abstract{Abstract of the chapter. Placeholder.}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}\label{sec:jones-intro}
+Placeholder text with a narrative citation \textcite[238]{mccarthy-prince1999}
+and a subject-index term\is{reduplication}. The first chapter is
+\cref{sec:smith-intro}.
+
+\begin{table}
+  \caption{Sample table}\label{tab:jones}
+  \begin{tabular}{ll}
+    \toprule
+    Form & Gloss \\
+    \midrule
+    \form{ta} & \gloss{go} \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\section{Conclusion}
+Placeholder \parencite{blevins2004}.
+
+\printbibliography
+\end{document}

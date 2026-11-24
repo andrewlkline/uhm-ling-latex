@@ -36,5 +36,7 @@ EOF
   echo "built dist/$2/ and dist/$2.zip"
 }
 
-build qp   uhm-qp-template
-build diss uhm-diss-template
+build qp     uhm-qp-template
+build diss   uhm-diss-template
+build book   uhm-book-template
+build volume uhm-volume-template

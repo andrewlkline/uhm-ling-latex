@@ -1,0 +1,4 @@
+# Lets a chapter compile on its own from this folder (latexmk smith.tex):
+# same settings as the book, with the class files one level up.
+do '../latexmkrc';
+ensure_path('TEXINPUTS', '..//');

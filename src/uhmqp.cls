@@ -113,7 +113,7 @@
 \newcommand\uhmqpHeadTitle{%
   \ifx\uhmqpShortTitle\@empty \@title \else \uhmqpShortTitle \fi}
 \newcommand\uhmqpHeadAuthor{%
-  \ifx\uhmqpShortAuthor\@empty {\def\and{, }\@author}\else \uhmqpShortAuthor \fi}
+  \ifx\uhmqpShortAuthor\@empty {\def\and{\unskip, }\@author}\else \uhmqpShortAuthor \fi}
 
 %% \maketitle calls \uhmqpMakeTitle, which each profile defines.
 \newcommand\uhmqpMakeTitle{%
@@ -177,6 +177,13 @@
   {\appendix
    \renewcommand*{\sectionformat}{\appendixname~\thesection\autodot\enskip}}
   {}
+
+%% LangSci index commands (\ia name, \il language, \is subject) are accepted
+%% and ignored, so a paper written for a uhmbook volume (or a LangSci book)
+%% also compiles on its own. In a uhmbook they feed the indexes.
+\providecommand*\ia[1]{}
+\providecommand*\il[1]{}
+\providecommand*\is[1]{}
 
 %% Bibliography heading: unnumbered section titled "References"
 \ifcsname printbibliography\endcsname

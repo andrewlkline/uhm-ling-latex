@@ -1,0 +1,19 @@
+{
+  // LaTeX Workshop (Positron / VS Code): build with latexmk and let this
+  // folder's latexmkrc choose the engine (XeLaTeX) and run Biber.
+  "latex-workshop.latex.recipes": [
+    { "name": "latexmk (project latexmkrc)", "tools": ["latexmk-rc"] }
+  ],
+  "latex-workshop.latex.tools": [
+    {
+      "name": "latexmk-rc",
+      "command": "latexmk",
+      "args": ["-synctex=1", "-interaction=nonstopmode", "-file-line-error", "%DOC%"]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "latexmk (project latexmkrc)",
+  // Ignore "% !TEX program" magic comments: they bypass latexmk and call
+  // biber directly (which fails on macOS 26 with TeX Live 2025).
+  "latex-workshop.latex.build.forceRecipeUsage": true,
+  "latex-workshop.latex.autoBuild.run": "onSave"
+}

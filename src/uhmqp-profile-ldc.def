@@ -45,9 +45,9 @@
     \raggedright
     {\usekomafont{disposition}\LARGE\@title\par}%
     \vskip 1.2\baselineskip
-    {\large\def\and{, }\@author\par}%
+    {\large\def\and{\unskip, }\@author\par}%
     \uhmqpIfSet\uhmqpAffiliation
-      {\vskip .2\baselineskip{\small\itshape\def\and{, }\uhmqpAffiliation\par}}{}%
+      {\vskip .2\baselineskip{\small\itshape\def\and{\unskip, }\uhmqpAffiliation\par}}{}%
     \uhmqpIfSet\uhmqpAbstract
       {\vskip 1.5\baselineskip{\small\uhmqpAbstract\par}}{}%
   \end{minipage}%

@@ -1,0 +1,58 @@
+%% Monograph template, UHM Linguistics (Language Science Press look).
+%% Compile with XeLaTeX (or LuaLaTeX) + Biber:   latexmk main.tex
+%% For a book that Language Science Press will publish, use their own
+%% langscibook class instead; this one has no LSP branding.
+\documentclass[
+  bibfile = references.bib,
+  % font  = charis,      % default: libertinus (as LangSci)
+  % cover = false,       % no front/back cover (e.g. while drafting)
+  % index = false,       % no name/language/subject indexes
+  % draft,               % date stamp and overfull-line marks
+]{uhmbook}
+
+\newleipzig{rdp}{rdp}{reduplication}
+
+\title{Title of the book}
+\subtitle{Subtitle of the book}
+\author{Author Name}
+\dedication{Dedication (optional).}
+\BackBody{Text for the back cover (optional). Placeholder.}
+% \covercolor{teal!60!black}
+% \coverseries{Series name or other short text at the foot of the cover}
+
+%% Imprint page (all optional)
+% \publisher{Publisher}
+% \place{Honolulu}
+% \bookyear{2027}
+% \license{Published under the Creative Commons Attribution 4.0 Licence (CC BY 4.0).}
+% \isbn{000-0-000000-00-0}
+% \bookdoi{10.0000/xxxx}
+% \typesetter{Name}
+% \proofreader{Name}
+
+\begin{document}
+\frontmatter
+\maketitle
+\tableofcontents
+
+\uhmbookChapter{Preface}
+Placeholder.
+
+\uhmbookChapter{Acknowledgments}
+Placeholder.
+
+\printglosses   % list of abbreviations (gloss abbreviations used in the book)
+
+\mainmatter
+\include{chapters/introduction}
+\include{chapters/data}
+\include{chapters/conclusion}
+
+\appendix
+\include{chapters/appendix}
+
+\backmatter
+\printbibliography
+\printindexes
+
+\end{document}

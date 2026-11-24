@@ -1,0 +1,32 @@
+# latexmk configuration (also read by Overleaf).
+# XeLaTeX + Biber by default. LuaLaTeX also works: run "latexmk -lualatex"
+# (or pick LuaLaTeX in Overleaf's Compiler menu), or set $pdf_mode = 4.
+# XeLaTeX is the default because LuaLaTeX rebuilds its font cache on a
+# fresh machine, which adds ~10 s to the first run and exceeds the compile
+# time of Overleaf's free plan. (The dissertation's "check" option needs
+# LuaLaTeX; use it for that run only.)
+$pdf_mode = 5;
+# Overleaf (and some editors) call latexmk with -pdf, i.e. "use pdfLaTeX",
+# which overrides $pdf_mode above. The classes need XeLaTeX or LuaLaTeX,
+# so make the pdfLaTeX command run XeLaTeX. On Overleaf you can then leave
+# Menu > Compiler at its default.
+$pdflatex = 'xelatex %O %S';
+$postscript_mode = $dvi_mode = 0;
+$bibtex_use = 2;      # run biber when needed; delete .bbl on cleanup
+
+# Let LaTeX find the class/style files in ./uhm-ling/ if they are kept
+# in a subfolder (they are copied next to main.tex by default).
+ensure_path('TEXINPUTS', './uhm-ling//');
+
+# Abbreviation list (glossaries/leipzig): run makeindex between LaTeX runs.
+add_cus_dep('glo', 'gls', 0, 'uhm_makeglossaries');
+sub uhm_makeglossaries {
+  return system("makeindex -s \"$_[0].ist\" -t \"$_[0].glg\" -o \"$_[0].gls\" \"$_[0].glo\"");
+}
+
+# Let "latexmk -c" also remove the abbreviation-list (glossaries) files.
+$clean_ext .= " glg glo gls ist run.xml";
+
+# biblatex rewrites main.run.xml on every run; nothing reads it back, so
+# its changes should not cost another LaTeX pass.
+$hash_calc_ignore_pattern{'xml'} = '.*';

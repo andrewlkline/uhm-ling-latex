@@ -4,7 +4,8 @@ LaTeX templates for the Department of Linguistics, University of Hawaiʻi at Mā
 
 - **`uhmdiss`**: a dissertation (and MA thesis) class that follows the UHM Graduate Education *eTD Style & Policy Guide* (October 2018, still the current edition as of November 2026).
 - **`uhmqp`**: a qualifying-paper class with journal **profiles**. QPs go to the department, and review is not blind. They are styled like a target journal so they can later be reformatted for real submission. Profiles: `langsci` (default), `ldc`, `ol`, `stuf`, plus a documented `blank` profile for writing new ones.
-- **`uhm-ling-core`**: the shared package both classes load. It handles fonts, glossing, tables, the bibliography, the abbreviations list and page-break discipline.
+- **`uhmbook`**: a book class in the Language Science Press style, for monographs and edited volumes, with covers, imprint, table of contents and indexes. It has no LSP branding.
+- **`uhm-ling-core`**: the shared package all the classes load. It handles fonts, glossing, tables, the bibliography, the abbreviations list and page-break discipline.
 
 The aim is to replace copying preambles from old projects. Everything compiles the same way locally (Positron/VS Code with LaTeX Workshop, or `latexmk`) and on Overleaf.
 
@@ -49,9 +50,12 @@ src/                       the machinery (this is what gets installed/copied)
   uhmqp.cls                QP class
   uhmqp-profile-*.def      QP journal profiles
   uhmdiss.cls              dissertation class
+  uhmbook.cls              book class (monograph / edited volume, LangSci look)
   uhmdiss-check.lua        LuaLaTeX page checker for uhmdiss [check]
 templates/qp/              QP starter: main.tex, references.bib, latexmkrc
 templates/diss/            dissertation starter (+ chapters/)
+templates/book/            monograph starter (+ chapters/)
+templates/volume/          edited-volume starter (chapters/ are uhmqp papers)
 scripts/test.sh            compile every template x profile x engine and check
 scripts/check-margins.py   scan any PDF for ink inside the 1in margins
 scripts/build-templates.sh make dist/ folders + Overleaf zips
@@ -135,6 +139,35 @@ A *Linguistic Typology* profile can start from `stuf`: both journals use the sam
 - Page ranges abbreviated.
 
 The Chicago page-range abbreviation is approximate: `mkcomprange` keeps at least two digits, so 101–108 becomes 101–08 rather than OL's 101–8.
+
+## Book class (`uhmbook`)
+
+```latex
+\documentclass[bibfile=references.bib]{uhmbook}               % monograph
+\documentclass[collection, bibfile=references.bib]{uhmbook}   % edited volume
+```
+
+It covers what the `langscibook` documentation describes, without the publisher. Templates: `templates/book/` (monograph) and `templates/volume/` (edited volume).
+
+- **Front matter.** `\maketitle` produces:
+  - the front cover (a coloured panel with title, subtitle and author; `\covercolor{…}`, optional `\coverseries{…}`);
+  - a blank verso, then the inside title page;
+  - the imprint page, with a citation of the book and © year and author. Optional lines: `\publisher`, `\place`, `\bookyear`, `\license`, `\isbn`, `\bookdoi`, `\typesetter`, `\proofreader` and `\imprintextra`. A font credit is added automatically;
+  - the `\dedication{…}` page, if given.
+  
+  Then `\tableofcontents` and unnumbered front-matter chapters with `\uhmbookChapter{Preface}`. `\printglosses` gives the abbreviations list.
+- **Main and back matter:** `\mainmatter`, then chapters (and `\appendix`), then `\backmatter`. `\printbibliography` gives a "References" chapter, and `\printindexes` prints the name, language and subject indexes, each listed under "Indexes" in the TOC. The back cover (`\BackTitle`, `\BackBody{blurb}`) is added automatically on the last even page. Turn the covers off with `cover=false`.
+- **Indexes,** with LangSci's commands: `\ia{Name}`, `\il{Language}` and `\is{subject}`. Cited authors go into the name index automatically (biblatex `indexing=cite`). `imakeidx` runs `makeindex` for all three during the LaTeX run. An index with no entries is left out. Turn indexing off with `index=false`.
+- **Edited volumes (`collection`).** Each chapter is a complete `uhmqp` paper with `profile=langsci`, added with `\includepaper{chapters/smith}`, as LangSci's `\includepaper` works. Inside the book:
+  - the paper's preamble is ignored;
+  - its `\maketitle` becomes a "Chapter n" opening with the authors, affiliations and abstract;
+  - its `\printbibliography` lists only that paper's references, as a section at its end;
+  - the TOC shows each chapter title with its authors;
+  - running heads show the authors on even pages and the (short) title on odd pages.
+  
+  `\author{…}` on the book is the editors ("Edited by"; "(eds.)" in the imprint). Each paper also compiles on its own: `cd chapters && latexmk smith.tex`. A `latexmkrc` there finds the class files one level up. `uhmqp` accepts `\ia`/`\il`/`\is` and ignores them, so LangSci-style papers compile as QPs too. Put `\newleipzig` and extra packages in the book's preamble.
+- **Look:** 170×240 mm, Libertinus, bold serif headings, "1 Introduction" chapters ("Chapter 1" in collections), and captions 80% of the text width, all as langscibook.
+- **Not included:** the print-on-demand dust-jacket outputs (`coverbodhc` and the like), series pages, logos and ISBN barcodes. For a book that Language Science Press will publish, use their own `langscibook` class; its output is LSP-branded by design.
 
 ## Dissertation class (`uhmdiss`)
 

@@ -91,9 +91,9 @@
   {\leftskip 18pt plus 1fil\rightskip 18pt plus 1fil\parfillskip\z@
    \fontsize{18pt}{20pt}\selectfont\bfseries\@title\par}%
   \vskip 12pt
-  {\fontsize{12pt}{14pt}\selectfont\def\and{, }\@author\par}%
+  {\fontsize{12pt}{14pt}\selectfont\def\and{\unskip, }\@author\par}%
   \uhmqpIfSet\uhmqpAffiliation
-    {\vskip 9pt{\scshape\def\and{, }\MakeLowercase{\uhmqpAffiliation}\par}}{}%
+    {\vskip 9pt{\scshape\def\and{\unskip, }\MakeLowercase{\uhmqpAffiliation}\par}}{}%
   \uhmqpIfSet\uhmqpAbstract
     {\vskip 14pt
      {\leftskip 18pt\rightskip 18pt\parfillskip\z@ plus 1fil

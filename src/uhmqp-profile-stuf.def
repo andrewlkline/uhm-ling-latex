@@ -36,7 +36,7 @@
   \begingroup
   \raggedright
   \vspace*{4mm}%
-  {\sffamily\large\def\and{, }\@author\uhmqpIfSet\uhmqpEmail{*}{}\par}%
+  {\sffamily\large\def\and{\unskip, }\@author\uhmqpIfSet\uhmqpEmail{*}{}\par}%
   \vskip 2pt
   {\sffamily\bfseries\fontsize{19pt}{23pt}\selectfont\@title\par}%
   \vskip 1.6\baselineskip
@@ -50,8 +50,8 @@
     \begingroup
     \renewcommand\thefootnote{}%
     \deffootnote[0pt]{0pt}{0pt}{}%
-    \footnotetext{\textsf{\textbf{*Corresponding author: {\def\and{, }\@author}}},
-      \uhmqpIfSet\uhmqpAffiliation{{\def\and{; }\uhmqpAffiliation}, }{}%
+    \footnotetext{\textsf{\textbf{*Corresponding author: {\def\and{\unskip, }\@author}}},
+      \uhmqpIfSet\uhmqpAffiliation{{\def\and{\unskip; }\uhmqpAffiliation}, }{}%
       E-mail: \uhmqpEmail}%
     \endgroup}{}%
 }

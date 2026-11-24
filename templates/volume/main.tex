@@ -1,0 +1,40 @@
+%% Edited-volume template, UHM Linguistics (Language Science Press look).
+%% Compile with XeLaTeX (or LuaLaTeX) + Biber:   latexmk main.tex
+%%
+%% Each chapter is a complete paper in chapters/ (class uhmqp, profile
+%% langsci), added with \includepaper. Inside the book its own preamble is
+%% ignored; on its own it compiles as a paper:  cd chapters && latexmk smith.tex
+%% Gloss abbreviations (\newleipzig) and packages go in THIS preamble.
+\documentclass[
+  collection,
+  bibfile = references.bib,
+  % font  = charis,      % default: libertinus (as LangSci)
+  % cover = false,
+  % index = false,
+  % draft,
+]{uhmbook}
+
+\newleipzig{rdp}{rdp}{reduplication}
+
+\title{Title of the edited volume}
+\subtitle{Subtitle}
+\author{Editor One \and Editor Two}   % the volume editors
+\BackBody{Text for the back cover (optional). Placeholder.}
+% \covercolor{teal!60!black}
+
+\begin{document}
+\frontmatter
+\maketitle
+\tableofcontents
+
+\uhmbookChapter{Preface}
+Placeholder.
+
+\mainmatter
+\includepaper{chapters/smith}
+\includepaper{chapters/jones}
+
+\backmatter
+\printindexes
+
+\end{document}

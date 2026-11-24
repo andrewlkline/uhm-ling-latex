@@ -1,0 +1,29 @@
+%% A chapter of the volume. Compiles on its own as a paper (cd chapters &&
+%% latexmk smith.tex); inside the book, \includepaper ignores this preamble.
+\documentclass[profile=langsci, bibfile=../references.bib]{uhmqp}
+
+\title{Title of the first chapter}
+\shorttitle{Short title}
+\author{Chapter Author}
+\affiliation{University of Hawaiʻi at Mānoa}
+\abstract{Abstract of the chapter. Placeholder.}
+
+\begin{document}
+\maketitle
+
+\section{Introduction}\label{sec:smith-intro}
+Placeholder text with a citation \parencite[514--515]{murray-vennemann1983}
+and an object-language form \form{ta-wa}\il{Placeholder language}
+\gloss{go}.\footnote{A footnote.} See \cref{ex:smith}.
+
+\ea\label{ex:smith}
+  \gll ta-wa ku\\
+       \Fsg-go house\\
+  \glt `I go home.' \exsource{Source 2020: 12}
+\z
+
+\section{Conclusion}
+Placeholder.
+
+\printbibliography
+\end{document}

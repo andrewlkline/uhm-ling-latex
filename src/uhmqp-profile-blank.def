@@ -51,8 +51,8 @@
   \begin{center}
     {\usekomafont{disposition}\LARGE\@title\par}%
     \vskip\baselineskip
-    {\large\def\and{, }\@author\par}%
-    \uhmqpIfSet\uhmqpAffiliation{{\def\and{, }\uhmqpAffiliation\par}}{}%
+    {\large\def\and{\unskip, }\@author\par}%
+    \uhmqpIfSet\uhmqpAffiliation{{\def\and{\unskip, }\uhmqpAffiliation\par}}{}%
   \end{center}
   \uhmqpIfSet\uhmqpAbstract{%
     \begin{quote}\small\textbf{Abstract:} \uhmqpAbstract
